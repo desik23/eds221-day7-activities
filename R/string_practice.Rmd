@@ -1,0 +1,31 @@
+---
+title: "String Practice"
+author: "Desik Somasundaram"
+date: "8/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+alarm_report <- tibble::tribble(
+         ~date,           ~building,                                              ~alarm_message,
+  "2020-03-14", "Engineering-North", "10:02am – HVAC system down, facilities management alerted",
+  "2020-03-15",         "Bren Hall",                    "8:24am – Elevator North out of service",
+  "2020-04-10", "Engineering-South",     "12:41am – Fire alarm, UCSB fire responded and cleared",
+  "2020-04-18",        "Engr-North",     "9:58pm – Campus point emergency siren, UCPD responded"
+  )
+
+alarm_report$building <- str_replace(alarm_report$building, "Engr", "Engineering")
+
+alarm_report_modified <- separate(alarm_report, building, c("building" , "wing"), sep ="-") %>% 
+  filter(str_detect(alarm_message, "responded")) %>% 
+  separate(alarm_message, c("time", "alarm_message"), sep = " – ") %>% 
+  mutate(date = lubridate::ymd(date))
+
+
+  
+```
+
